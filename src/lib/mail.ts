@@ -23,12 +23,7 @@ if (MAILHOST && MAILPORT && MAILUSERNAME && MAILPASSWORD && MAILSOURCE) {
 	throw Error('Missing environment variables for sending emails');
 }
 
-export const sendMail = async (mail: {
-	from: string;
-	to: string;
-	subject: string;
-	text: string;
-}) => {
+export const sendMail = async (mail: { to: string; subject: string; text: string }) => {
 	await transporter.sendMail(mail);
-	console.log(`Mail sent from ${mail.from} to ${mail.to} with subject ${mail.subject}`);
+	console.log(`Mail sent from ${MAILSOURCE} to ${mail.to} with subject ${mail.subject}`);
 };

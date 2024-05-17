@@ -5,6 +5,7 @@ import { stageUser } from '$lib/ipa';
 import { sanitize } from '$lib/sanitize';
 import { hash } from '$lib/hash';
 import { ADMINMAIL, MAILSOURCE } from '$env/static/private';
+import { fail } from '@sveltejs/kit';
 
 export const actions = {
 	default: async ({ request }) => {
@@ -13,7 +14,7 @@ export const actions = {
 		const firstname = data.get('firstname')?.toString();
 		const lastname = data.get('lastname')?.toString();
 		const email = data.get('email')?.toString();
-		if (!username || !firstname || !lastname || !email) return { success: false };
+		if (!username || !firstname || !lastname || !email) return fail(400);
 		if (!ADMINMAIL || !MAILSOURCE) {
 			throw Error('Administrator mail or mail source not set up');
 		}
@@ -27,8 +28,14 @@ export const actions = {
 		};
 
 		const errors = sanitize(user);
-		if (errors.length != 0) {
-			console.error(errors);
+		if (errors) {
+			return {
+				username,
+				firstname,
+				lastname,
+				email,
+				errors
+			};
 		}
 
 		user.fullname = `${user.firstname} ${user.lastname}`;
@@ -47,7 +54,6 @@ export const actions = {
 			const acceptLink = '';
 			const denyLink = '';
 			sendMail({
-				from: MAILSOURCE as string,
 				to: ADMINMAIL,
 				subject: `${username} has been staged`,
 				text: `An account has been staged and waiting activation:\n

@@ -1,5 +1,7 @@
-import { redirect, type Actions } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { CASURL } from '$env/static/private';
+import type { User } from '$lib/types';
+import { sanitize } from '$lib/sanitize';
 
 export const actions = {
 	default: async ({ request, cookies, url }) => {
@@ -7,8 +9,21 @@ export const actions = {
 		const firstname = data.get('firstname')?.toString();
 		const lastname = data.get('lastname')?.toString();
 		const email = data.get('email')?.toString();
-		console.log('test');
-		if (!firstname || !lastname || !email) return { success: false };
+		if (!firstname || !lastname || !email) return fail(400);
+		let user: User = {
+			firstname,
+			lastname,
+			email
+		};
+		const errors = sanitize(user);
+		if (errors) {
+			return {
+				firstname,
+				lastname,
+				email,
+				errors
+			};
+		}
 		cookies.set(
 			'userdata',
 			JSON.stringify({
@@ -24,9 +39,9 @@ export const actions = {
 				secure: true
 			}
 		);
-		throw redirect(
+		redirect(
 			302,
-			`${CASURL}login?service=${encodeURIComponent(url.protocol + url.hostname + url.pathname + '/callback&renew=true')}`
+			`${CASURL}login?service=${encodeURIComponent(url.toString() + '/callback')}&renew=true`
 		);
 	}
 } satisfies Actions;

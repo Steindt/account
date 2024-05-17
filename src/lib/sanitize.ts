@@ -1,29 +1,60 @@
+import type { Error, User } from './types';
+
+const illegalCharactersUsername = /[ `!@#$%^&*()_+=\[\]{};':"\\|,.<>\/?~åäö]/;
+const illegalCharactersName = /[`!@#$%^&*()_+=\[\]{};':"\\|,.<>\/?~1234567890]/;
+const illegalCharactersEmail = /[`!#$%^&*()_=\[\]{};':"\\|,<>\/?~]/;
+
 // Returns array of strings informing of each error
-export const sanitize = (user: {
-	username: string;
-	firstname: string;
-	lastname: string;
-	fullname: string;
-	email: string;
-}) => {
-	let errors: string[] = [];
-	errors = checkLength('Username', user.username, 3, 12, errors);
-	errors = checkLength('Firstname', user.firstname, 1, 255, errors);
-	errors = checkLength('Lastname', user.lastname, 1, 255, errors);
-	errors = checkLength('Email', user.email, 1, 255, errors);
+export const sanitize = (user: User) => {
+	let errors: Error = {
+		username: [],
+		firstname: [],
+		lastname: [],
+		email: []
+	};
 
-	const illegalCharactersUsername = /[ `!@#$%^&*()_+=\[\]{};':"\\|,.<>\/?~åäö]/;
-	const illegalCharactersName = /[`!@#$%^&*()_+=\[\]{};':"\\|,.<>\/?~1234567890]/;
-	const illegalCharactersEmail = /[`!#$%^&*()_=\[\]{};':"\\|,<>\/?~]/;
+	if (user.username) {
+		errors.username = checkLength('Username', user.username, 3, 12, errors.username);
+		errors.username = checkCharacters(
+			'Username',
+			user.username,
+			illegalCharactersUsername,
+			errors.username
+		);
+	}
 
-	user.email = parseString(user.email);
+	if (user.firstname) {
+		errors.firstname = checkLength('Firstname', user.firstname, 1, 255, errors.firstname);
+		errors.firstname = checkCharacters(
+			'Firstname',
+			user.firstname,
+			illegalCharactersName,
+			errors.firstname
+		);
+	}
 
-	errors = checkCharacters('Username', user.username, illegalCharactersUsername, errors);
-	errors = checkCharacters('Firstname', user.firstname, illegalCharactersName, errors);
-	errors = checkCharacters('Lastname', user.lastname, illegalCharactersName, errors);
-	errors = checkCharacters('Email', user.email, illegalCharactersEmail, errors);
+	if (user.lastname) {
+		errors.lastname = checkLength('Lastname', user.lastname, 1, 255, errors.lastname);
+		errors.lastname = checkCharacters(
+			'Lastname',
+			user.lastname,
+			illegalCharactersName,
+			errors.lastname
+		);
+	}
 
-	return errors;
+	if (user.email) {
+		errors.email = checkLength('Email', user.email, 1, 255, errors.email);
+		user.email = parseString(user.email);
+		errors.email = checkCharacters('Email', user.email, illegalCharactersEmail, errors.email);
+	}
+
+	return errors.username.length > 0 ||
+		errors.firstname.length > 0 ||
+		errors.lastname.length > 0 ||
+		errors.email.length > 0
+		? errors
+		: undefined;
 };
 
 const checkLength = (

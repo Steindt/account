@@ -1,12 +1,10 @@
 import child_process from 'child_process';
 import util from 'util';
+import type { User } from './types';
 
 const exec = util.promisify(child_process.exec);
 
-export const stageUser = async (
-	user: { username: string; firstname: string; lastname: string; fullname: string; email: string },
-	student: boolean
-) => {
+export const stageUser = async (user: User, student: boolean) => {
 	const res = await exec(
 		`ipa stageuser-add ${user.username} 
       --first=${user.firstname} 
@@ -28,10 +26,7 @@ export const stageUser = async (
 	return true;
 };
 
-export const activateUser = async (
-	user: { username: string; firstname: string; lastname: string; fullname: string; email: string },
-	student: boolean
-) => {
+export const activateUser = async (user: User) => {
 	await exec(`ipa stageuser-activate ${user.username}`).catch((err) => {
 		console.error(`Failed to activate user:
     Username: ${user.username}\n
@@ -46,13 +41,7 @@ export const activateUser = async (
 	return true;
 };
 
-export const checkAlreadyExists = async (user: {
-	username: string;
-	firstname: string;
-	lastname: string;
-	fullname: string;
-	email: string;
-}) => {
+export const checkAlreadyExists = async (user: User) => {
 	const res = await exec(`ipa user-find --login="${user.username}"`);
 	let number = '0';
 	for (let i = 10; i < 20; i++) {

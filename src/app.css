@@ -2,9 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+/* form {
+	padding: 15px;
+	border-radius: 5px;
+	box-shadow: 5px 5px 5px 3px rgba(0, 0, 0, 0.2);
+	margin-top: 10px;
+} */
+
 input[type='text'],
 input[type='email'] {
 	border: 1px solid black;
 	border-radius: 5px;
-	margin: 2px;
+	width: 100%;
+	padding: 8px;
+	margin: 5px 0 0 0;
+}
+
+input:focus {
+	outline: 2px solid black;
+	transition: all 0.5s ease;
+}
+
+input {
+	outline: 2px solid transparent;
+}
+
+label {
+	cursor: pointer;
+}
+
+h1 {
+	font-weight: bold;
+	font-size: xx-large;
+	margin: 10px 0 10px 0;
+}
+
+h2 {
+	font-weight: bold;
+	font-size: x-large;
+	margin: 8px 0 8px 0;
+}
+
+h3 {
+	font-weight: bold;
+	font-size: large;
+	margin: 5px 0 5px 0;
 }

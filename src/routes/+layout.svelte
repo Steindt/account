@@ -1,9 +1,13 @@
 <script>
 	import '../app.css';
+	import { page } from '$app/stores';
+	console.log($page.url.pathname);
 </script>
 
 <nav class="mb-2 flex bg-[#F280A1] p-2">
-	<a href="/">Back</a>
-	<a href="https://dsek.se" class="btn absolute right-0 pr-2">dsek.se</a>
+	{#if $page.url.pathname != '/'}
+		<a href="/">Home</a>
+	{/if}
+	<a href="https://dsek.se" class="btn ml-auto pr-2">Main website</a>
 </nav>
 <slot />

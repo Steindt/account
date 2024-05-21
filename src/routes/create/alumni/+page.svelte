@@ -17,7 +17,7 @@
 				<input
 					required
 					type="text"
-					placeholder="STIL-id (ab1234cd-s, da64ab)"
+					placeholder="Username (ab1234cd-s, da64ab)"
 					name="username"
 					class="p-1"
 					value={form?.username ?? ''}

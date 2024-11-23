@@ -1,6 +1,6 @@
 import axios, { type AxiosResponse } from 'axios';
 import type { KeycloakUser, User } from './types';
-import { KEYCLOAKREALM, KEYCLOAKURL, KEYCLOAKCLIENT } from '$env/static/private';
+import { KEYCLOAKREALM, KEYCLOAKURL } from '$env/static/private';
 
 const getToken = async () => {
 	const res = await axios

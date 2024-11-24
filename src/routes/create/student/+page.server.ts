@@ -41,7 +41,7 @@ export const actions = {
 		);
 		redirect(
 			302,
-			`${CASURL}login?service=${encodeURIComponent(url.toString() + '/callback')}&renew=true`
+			`${CASURL}login?service=${encodeURIComponent(url.protocol + '//' + url.host + url.pathname + '/callback')}&renew=true`
 		);
 	}
 } satisfies Actions;

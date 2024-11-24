@@ -9,7 +9,7 @@ export async function load({ cookies, url }) {
 	const data: User = JSON.parse(cookie);
 	const ticket = url.searchParams.get('ticket');
 	if (ticket == null || !data) throw error(400);
-	const username = await validateTicket(ticket, url.toString());
+	const username = await validateTicket(ticket, url.protocol + '//' + url.host + url.pathname);
 	const user: User = {
 		username,
 		firstname: data.firstname,

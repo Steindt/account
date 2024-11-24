@@ -1,14 +1,19 @@
 import axios, { type AxiosResponse } from 'axios';
 import type { KeycloakUser, User } from './types';
-import { KEYCLOAKREALM, KEYCLOAKURL } from '$env/static/private';
+import {
+	KEYCLOAKREALM,
+	KEYCLOAKURL,
+	KEYCLOAKUSERNAME,
+	KEYCLOAKPASSWORD
+} from '$env/static/private';
 
 const getToken = async () => {
 	const res = await axios
 		.post(
-			`${process.env.KEYCLOAKURL}realms/master/protocol/openid-connect/token`,
+			`${KEYCLOAKURL}realms/master/protocol/openid-connect/token`,
 			{
-				username: process.env.KEYCLOAKUSERNAME,
-				password: process.env.KEYCLOAKPASSWORD,
+				username: KEYCLOAKUSERNAME,
+				password: KEYCLOAKPASSWORD,
 				grant_type: 'password',
 				client_id: 'admin-cli'
 			},
@@ -31,7 +36,7 @@ const activateUser = async (user: User) => {
 	const token = await getToken();
 
 	const search = await axios
-		.get(`${process.env.KEYCLOAKURL}admin/realms/${process.env.KEYCLOAKREALM}/users`, {
+		.get(`${KEYCLOAKURL}admin/realms/${KEYCLOAKREALM}/users`, {
 			params: {
 				username: user.username,
 				exact: true
@@ -53,7 +58,7 @@ const activateUser = async (user: User) => {
 
 	await axios
 		.put(
-			`${process.env.KEYCLOAKURL}admin/realms/${process.env.KEYCLOAKREALM}/users/${id}`,
+			`${KEYCLOAKURL}admin/realms/${KEYCLOAKREALM}/users/${id}`,
 			{
 				id: id,
 				requiredActions: ['UPDATE_PASSWORD']
@@ -69,16 +74,12 @@ const activateUser = async (user: User) => {
 		});
 
 	await axios
-		.put(
-			`${process.env.KEYCLOAKURL}admin/realms/${process.env.KEYCLOAKREALM}/users/${id}/execute-actions-email`,
-			null,
-			{
-				headers: {
-					Authorization: 'Bearer ' + token,
-					'Content-Type': 'application/json'
-				}
+		.put(`${KEYCLOAKURL}admin/realms/${KEYCLOAKREALM}/users/${id}/execute-actions-email`, null, {
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
 			}
-		)
+		})
 		.catch((err) => {
 			console.error(err.data);
 		});

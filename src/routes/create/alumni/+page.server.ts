@@ -46,13 +46,14 @@ export const actions = {
 				(err) => {
 					if (err) {
 						console.error(err);
+						redirect(400, '/');
 					} else {
 						console.log(`Staged user ${user.username}`);
 					}
 				}
 			);
-			const acceptLink = '';
-			const denyLink = '';
+			const acceptLink = 'https://dsek.se/';
+			const denyLink = 'https://esek.se/';
 			sendMail({
 				to: ADMINMAIL,
 				subject: `${username} has been staged`,

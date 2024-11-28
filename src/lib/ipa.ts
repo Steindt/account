@@ -6,12 +6,7 @@ const exec = util.promisify(child_process.exec);
 
 export const stageUser = async (user: User, student: boolean) => {
 	const res = await exec(
-		`ipa stageuser-add ${user.username} \
-      --first=${user.firstname} \
-      --last=${user.lastname} \
-      --cn=${user.fullname} \
-      --random --email=${user.email} \ 
-      --class=${student ? 'student' : 'alumni'} \ `
+		`ipa stageuser-add ${user.username} --first=${user.firstname} --last=${user.lastname} --cn=${user.fullname} --random --email=${user.email} --class=${student ? 'student' : 'alumni'} `
 	).catch((err) => {
 		console.error(`Failed to stage user:
       Username: ${user.username}\n

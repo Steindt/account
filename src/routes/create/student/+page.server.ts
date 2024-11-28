@@ -32,11 +32,11 @@ export const actions = {
 				email
 			}),
 			{
-				path: '/',
+				path: '',
 				sameSite: true,
 				httpOnly: true,
-				maxAge: 300,
-				secure: false
+				secure: false,
+				maxAge: 300
 			}
 		);
 		redirect(

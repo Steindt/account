@@ -2,10 +2,10 @@ import { error, redirect } from '@sveltejs/kit';
 import type { User } from '$lib/types.js';
 import { validateTicket } from '$lib/cas.js';
 import { activateUser, checkAlreadyExists, stageUser } from '$lib/ipa.js';
+import type { RequestEvent } from '@sveltejs/kit';
 
 export async function load({ cookies, url }) {
 	const cookie = cookies.get('userdata');
-	console.log(cookies.getAll());
 	if (!cookie) throw error(400, 'No cookie found');
 	const data: User = JSON.parse(cookie);
 	const ticket = url.searchParams.get('ticket');

@@ -36,7 +36,7 @@ export const actions = {
 				sameSite: true,
 				httpOnly: true,
 				maxAge: 300,
-				secure: true
+				secure: false
 			}
 		);
 		redirect(

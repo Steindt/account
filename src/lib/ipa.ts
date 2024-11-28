@@ -11,7 +11,7 @@ export const stageUser = async (user: User, student: boolean) => {
       --last=${user.lastname} \
       --cn=${user.fullname} \
       --random --email=${user.email} \ 
-      --class=${student ? 'student' : 'alumni'}`
+      --class=${student ? 'student' : 'alumni'} \ `
 	).catch((err) => {
 		console.error(`Failed to stage user:
       Username: ${user.username}\n

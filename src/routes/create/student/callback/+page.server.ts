@@ -5,6 +5,7 @@ import { activateUser, checkAlreadyExists, stageUser } from '$lib/ipa.js';
 
 export async function load({ cookies, url }) {
 	const cookie = cookies.get('userdata');
+	console.log(cookies.getAll());
 	if (!cookie) throw error(400, 'No cookie found');
 	const data: User = JSON.parse(cookie);
 	const ticket = url.searchParams.get('ticket');

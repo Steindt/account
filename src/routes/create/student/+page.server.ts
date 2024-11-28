@@ -32,7 +32,7 @@ export const actions = {
 				email
 			}),
 			{
-				path: '/create/student',
+				path: '/',
 				sameSite: true,
 				httpOnly: true,
 				maxAge: 300,

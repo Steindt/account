@@ -32,7 +32,7 @@ export const actions = {
 				email
 			}),
 			{
-				path: '/create/student/callback',
+				path: '/create/student',
 				sameSite: true,
 				httpOnly: true,
 				maxAge: 300,

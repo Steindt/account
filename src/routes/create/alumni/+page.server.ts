@@ -5,7 +5,7 @@ import { stageUser } from '$lib/ipa';
 import { sanitize } from '$lib/sanitize';
 import { hash } from '$lib/hash';
 import { ADMINMAIL, MAILSOURCE } from '$env/static/private';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
 	default: async ({ request }) => {
@@ -66,5 +66,6 @@ export const actions = {
 				`
 			});
 		}
+		redirect(302, '/');
 	}
 } satisfies Actions;

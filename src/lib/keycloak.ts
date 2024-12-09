@@ -6,6 +6,8 @@ import {
 	KEYCLOAKUSERNAME,
 	KEYCLOAKPASSWORD
 } from '$env/static/private';
+import { setTimeout } from 'timers';
+import { db } from './db';
 
 const getToken = async () => {
 	const res = await axios
@@ -125,27 +127,38 @@ export const resetPassword = async (user: User, email: string | undefined = unde
 				}
 			}
 		);
-		await axios.put(
-			`${KEYCLOAKURL}admin/realms/${KEYCLOAKREALM}/users/${userdata.id}`,
-			{
-				requiredActions: ['UPDATE_PASSWORD']
-			},
-			{
-				headers: {
-					Authorization: 'Bearer ' + token
+		await axios
+			.put(
+				`${KEYCLOAKURL}admin/realms/${KEYCLOAKREALM}/users/${userdata.id}`,
+				{
+					requiredActions: ['UPDATE_PASSWORD']
+				},
+				{
+					headers: {
+						Authorization: 'Bearer ' + token
+					}
 				}
-			}
-		);
-		await axios.put(
-			`${KEYCLOAKURL}admin/realms/${KEYCLOAKREALM}/users/${userdata.id}/execute-actions-email`,
-			null,
-			{
-				headers: {
-					Authorization: 'Bearer ' + token,
-					'Content-Type': 'application/json'
+			)
+			.catch((e) => console.error(e));
+		await axios
+			.put(
+				`${KEYCLOAKURL}admin/realms/${KEYCLOAKREALM}/users/${userdata.id}/execute-actions-email`,
+				null,
+				{
+					headers: {
+						Authorization: 'Bearer ' + token,
+						'Content-Type': 'application/json'
+					}
 				}
+			)
+			.catch((e) => console.error(e));
+		db.run(`INSERT INTO resetemail VALUES ('${user.username}', '${user.email}')`, (err) => {
+			if (err) {
+				console.error(err);
+			} else {
+				console.log(`Saved user original email`);
 			}
-		);
+		});
 	} catch (err) {
 		console.error(err);
 	}

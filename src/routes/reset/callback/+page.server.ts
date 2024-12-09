@@ -14,5 +14,5 @@ export async function load({ cookies, url }) {
 		`${username}@student.lu.se`
 	);
 	console.log(`Reset password for user ${username}`);
-	redirect(302, '/');
+	redirect(302, '/reset/success');
 }

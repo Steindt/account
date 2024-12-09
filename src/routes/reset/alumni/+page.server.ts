@@ -1,7 +1,7 @@
 import { resetPassword } from '$lib/keycloak';
 import { sanitize } from '$lib/sanitize';
 import type { User } from '$lib/types';
-import { fail, type Actions } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 
 export const actions = {
 	default: async ({ request, url }) => {
@@ -19,5 +19,6 @@ export const actions = {
 			};
 		}
 		resetPassword(user);
+		redirect(302, '/reset/success');
 	}
 } satisfies Actions;

@@ -16,6 +16,11 @@ db = new sqlite3.Database('./database.db', sqlite3.OPEN_READWRITE, (err) => {
       email TEXT NOT NULL,
       hashed TEXT NOT NULL
     );`);
+		db.exec(`
+		CREATE TABLE resetemail (
+			username TEXT UNIQUE NOT NULL,
+			email TEXT NOT NULL
+		);`);
 	} else {
 		console.error(err);
 	}

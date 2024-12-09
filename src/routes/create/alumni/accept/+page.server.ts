@@ -8,8 +8,8 @@ export async function load({ cookies, url }) {
 	if (!hashed) throw error(400);
 	db.serialize(() => {
 		db.get(`SELECT * FROM staged WHERE hashed='${hashed}'`, (err, row) => {
-			if (err) throw error(400);
-			if (!row) throw error(400);
+			if (err) throw error(400, 'Internal error');
+			if (!row) throw (error(400), 'Account is not staged');
 			const user: User = row;
 			activateUser(user);
 			console.log(`Activated an alumni account for ${user.username}`);

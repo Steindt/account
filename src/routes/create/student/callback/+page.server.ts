@@ -24,5 +24,5 @@ export async function load({ cookies, url }) {
 	await stageUser(user, true);
 	await activateUser(user);
 	console.log(`Activated a student account for ${user.username}`);
-	redirect(302, '/');
+	redirect(302, '/create/student/success');
 }

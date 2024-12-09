@@ -52,8 +52,8 @@ export const actions = {
 					}
 				}
 			);
-			const acceptLink = 'https://dsek.se/';
-			const denyLink = 'https://esek.se/';
+			const acceptLink = `https://regnew.dsek.se/create/alumni/accept?hash=${hash(user.username)}`;
+			const denyLink = `https://regnew.dsek.se/create/alumni/deny?hash=${hash(user.username)}`;
 			sendMail({
 				to: ADMINMAIL,
 				subject: `${username} has been staged`,
@@ -67,6 +67,6 @@ export const actions = {
 				`
 			});
 		}
-		redirect(302, '/');
+		redirect(302, '/create/alumni/success');
 	}
 } satisfies Actions;

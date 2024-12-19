@@ -14,14 +14,14 @@ export const stageUser = async (user: User, student: boolean) => {
       Lastname: ${user.lastname}\n
       Fullname: ${user.fullname}\n
       Email: ${user.email}\n`);
-		console.error(err);
+		console.error(`Staging user error: ${err}`);
 		return false;
 	});
 	// TODO: Check stdout and stderr
 	return true;
 };
 
-export const activateUser = async (user: User) => {
+export const activateUserIPA = async (user: User) => {
 	await exec(`ipa stageuser-activate ${user.username}`).catch((err) => {
 		console.error(`Failed to activate user:
     Username: ${user.username}\n
@@ -29,7 +29,7 @@ export const activateUser = async (user: User) => {
     Lastname: ${user.lastname}\n
     Fullname: ${user.fullname}\n
     Email: ${user.email}\n`);
-		console.error(err);
+		console.error(`Activating user error: ${err}`);
 		return false;
 	});
 	// TODO: Check stdout and stderr

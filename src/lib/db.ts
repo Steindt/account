@@ -5,7 +5,7 @@ db = new sqlite3.Database('./database.db', sqlite3.OPEN_READWRITE, (err) => {
 	if (err && (err as any).code == 'SQLITE_CANTOPEN') {
 		// Doesn't exist
 		db = new sqlite3.Database('database.db', (err) => {
-			console.error(err);
+			console.error(`Database error: ${err}`);
 		});
 		db.exec(`
     CREATE TABLE staged (
@@ -19,9 +19,12 @@ db = new sqlite3.Database('./database.db', sqlite3.OPEN_READWRITE, (err) => {
 		db.exec(`
 		CREATE TABLE resetemail (
 			username TEXT UNIQUE NOT NULL,
-			email TEXT NOT NULL
+			email TEXT NOT NULL,
+			uid TEXT NOT NULL
 		);`);
 	} else {
-		console.error(err);
+		if (err !== null) {
+			console.error(`Opening database error: ${err}`);
+		}
 	}
 });

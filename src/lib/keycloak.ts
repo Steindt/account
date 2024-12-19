@@ -9,7 +9,7 @@ import {
 import { setTimeout } from 'timers';
 import { db } from './db';
 
-const getToken = async () => {
+export const getToken = async () => {
 	const res = await axios
 		.post(
 			`${KEYCLOAKURL}realms/master/protocol/openid-connect/token`,
@@ -27,14 +27,14 @@ const getToken = async () => {
 			}
 		)
 		.catch((err) => {
-			console.error(err.data);
+			console.error(`Getting token error: ${err.data}`);
 		});
 
 	const token = (res as AxiosResponse<any, any>).data.access_token;
 	return token;
 };
 
-const activateUser = async (user: User) => {
+export const activateUserEmail = async (user: User) => {
 	const token = await getToken();
 
 	const search = await axios
@@ -116,17 +116,19 @@ export const resetPassword = async (user: User, email: string | undefined = unde
 	const token = await getToken();
 	const userdata: KeycloakUser = await getUser(user, token);
 	try {
-		await axios.put(
-			`${KEYCLOAKURL}admin/realms/${KEYCLOAKREALM}/users/${userdata.id}`,
-			{
-				email: email ?? userdata.email
-			},
-			{
-				headers: {
-					Authorization: 'Bearer ' + token
+		if (email) {
+			await axios.put(
+				`${KEYCLOAKURL}admin/realms/${KEYCLOAKREALM}/users/${userdata.id}`,
+				{
+					email: email
+				},
+				{
+					headers: {
+						Authorization: 'Bearer ' + token
+					}
 				}
-			}
-		);
+			);
+		}
 		await axios
 			.put(
 				`${KEYCLOAKURL}admin/realms/${KEYCLOAKREALM}/users/${userdata.id}`,
@@ -152,13 +154,36 @@ export const resetPassword = async (user: User, email: string | undefined = unde
 				}
 			)
 			.catch((e) => console.error(e));
-		db.run(`INSERT INTO resetemail VALUES ('${user.username}', '${user.email}')`, (err) => {
-			if (err) {
-				console.error(err);
-			} else {
-				console.log(`Saved user original email`);
+		db.run(
+			`INSERT INTO resetemail VALUES ('${userdata.username}', '${userdata.email}', '${userdata.id}')`,
+			(err) => {
+				if (err) {
+					console.error(err);
+				} else {
+					console.log(`Saved user original email`);
+				}
 			}
-		});
+		);
+		if (email) {
+			setTimeout(
+				async () => {
+					const token = await getToken();
+					await axios.put(
+						`${KEYCLOAKURL}admin/realms/${KEYCLOAKREALM}/users/${userdata.id}`,
+						{
+							email: userdata.email
+						},
+						{
+							headers: {
+								Authorization: 'Bearer ' + token
+							}
+						}
+					);
+					db.run(`DELETE FROM resetemail WHERE username='${user.username}'`);
+				},
+				1000 * 60 * 60 * 24
+			);
+		}
 	} catch (err) {
 		console.error(err);
 	}

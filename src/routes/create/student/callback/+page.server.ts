@@ -1,8 +1,9 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { User } from '$lib/types.js';
 import { validateTicket } from '$lib/cas.js';
-import { activateUser, checkAlreadyExists, stageUser } from '$lib/ipa.js';
+import { activateUserIPA, checkAlreadyExists, stageUser } from '$lib/ipa.js';
 import type { RequestEvent } from '@sveltejs/kit';
+import { activateUserEmail } from '$lib/keycloak';
 
 export async function load({ cookies, url }) {
 	const cookie = cookies.get('userdata');
@@ -22,7 +23,8 @@ export async function load({ cookies, url }) {
 		throw error(400, 'Account already exists');
 	}
 	await stageUser(user, true);
-	await activateUser(user);
+	await activateUserIPA(user);
+	await activateUserEmail(user);
 	console.log(`Activated a student account for ${user.username}`);
 	redirect(302, '/create/student/success');
 }

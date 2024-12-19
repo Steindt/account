@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import { db } from '$lib/db.js';
 import type { User } from '$lib/types.js';
-import { activateUser } from '$lib/ipa.js';
+import { activateUserIPA } from '$lib/ipa.js';
 
 export async function load({ cookies, url }) {
 	const hashed = url.searchParams.get('hash');
@@ -11,7 +11,7 @@ export async function load({ cookies, url }) {
 			if (err) throw error(400, 'Internal error');
 			if (!row) throw (error(400), 'Account is not staged');
 			const user: User = row;
-			activateUser(user);
+			activateUserIPA(user);
 			console.log(`Activated an alumni account for ${user.username}`);
 		});
 		db.run(`DELETE FROM staged WHERE hashed='${hashed}'`);

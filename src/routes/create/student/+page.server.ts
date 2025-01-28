@@ -32,14 +32,14 @@ export const actions = {
 				email
 			}),
 			{
-				path: '',
+				path: '/',
 				sameSite: true,
 				httpOnly: true,
 				secure: false,
 				maxAge: 300
 			}
 		);
-		redirect(
+		throw redirect(
 			302,
 			`${CASURL}login?service=${encodeURIComponent(url.protocol + '//' + url.host + url.pathname + '/callback')}&renew=true`
 		);

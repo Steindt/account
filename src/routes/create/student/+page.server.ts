@@ -33,7 +33,7 @@ export const actions = {
 			}),
 			{
 				path: '/',
-				sameSite: true,
+				sameSite: 'lax',
 				httpOnly: true,
 				secure: false,
 				maxAge: 300

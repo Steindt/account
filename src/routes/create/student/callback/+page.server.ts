@@ -2,7 +2,6 @@ import { error, redirect } from '@sveltejs/kit';
 import type { User } from '$lib/types.js';
 import { validateTicket } from '$lib/cas.js';
 import { activateUserIPA, checkAlreadyExists, stageUser } from '$lib/ipa.js';
-import type { RequestEvent } from '@sveltejs/kit';
 import { activateUserEmail } from '$lib/keycloak';
 
 export async function load({ cookies, url }) {

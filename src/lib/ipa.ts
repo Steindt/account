@@ -17,7 +17,9 @@ export const stageUser = async (user: User, student: boolean) => {
 		console.error(`Staging user error: ${err}`);
 		return false;
 	});
-	// TODO: Check stdout and stderr
+	if (res) {
+		console.log((res as { stdout: string; stderr: string }).stdout);
+	}
 	return true;
 };
 
